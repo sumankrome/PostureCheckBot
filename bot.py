@@ -5,6 +5,7 @@ import postureCheck
 import horoscope
 import images
 import os
+from dotenv import load_dotenv
 
 class BotClient(discord.Client):
     def __init__(self, intents: discord.Intents):
@@ -17,6 +18,7 @@ class BotClient(discord.Client):
         self.count = 0
 
 def run_discord_bot():
+    load_dotenv()
     bot = BotClient(intents=discord.Intents.all())
     @bot.event
     async def on_ready():
@@ -25,7 +27,7 @@ def run_discord_bot():
 
     @bot.tree.command(name='sync', description='Owner only')
     async def sync(interaction: discord.integrations):
-        if interaction.user.id == os.getenv("USERID"):
+        if interaction.user.id == os.getenv('USERID'):
             await bot.tree.sync()
             print('Command tree synced.')
             await interaction.response.send_message('Bot has been synced', ephemeral=True)
@@ -123,4 +125,4 @@ def run_discord_bot():
         message = horoscope.get_horoscope(sign.value)
         await interaction.response.send_message(message)
 
-    bot.run(os.getenv("TOKEN"))
+    bot.run(os.getenv('DISCORD_TOKEN'))
