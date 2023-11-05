@@ -12,7 +12,7 @@ class BotClient(discord.Client):
         super().__init__(intents=intents)
         self.tree = app_commands.CommandTree(self)
 
-        self.timer = 5
+        self.timer = 30
         self.isStarted = False
         self.atUsers = []
         self.count = 0
@@ -41,7 +41,7 @@ def run_discord_bot():
         try:
             timer = float(timer)
             await postureCheck.set_timer(bot, interaction, timer)
-            task_loop.change_interval(seconds=float(bot.timer))
+            task_loop.change_interval(minutes=float(bot.timer))
         except ValueError:
             await interaction.response.send_message(f"Please input a number.")
 
@@ -80,7 +80,7 @@ def run_discord_bot():
     async def postureHelp(interaction: discord.integrations):
         await interaction.response.send_message(postureCheck.postureCheckHelp, ephemeral = True)
 
-    @tasks.loop(seconds=bot.timer) #Loop code
+    @tasks.loop(minutes=bot.timer) #Loop code
     async def task_loop(channel):
         usersToAt = ""
         for i in bot.atUsers:
